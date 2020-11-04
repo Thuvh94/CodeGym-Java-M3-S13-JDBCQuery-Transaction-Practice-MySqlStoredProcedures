@@ -5,6 +5,7 @@ import service.UserDAO;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,8 +43,11 @@ public class UserServlet extends HttpServlet {
         }
     }
 
+
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String action = request.getParameter("action");
         if (action == null) {
             action = "";
@@ -59,6 +63,9 @@ public class UserServlet extends HttpServlet {
                     break;
                 case "delete":
                     deleteUser(request, response);
+                    break;
+                case "search":
+                    searchByName(request,response);
                     break;
                 default:
                     listUser(request, response);
@@ -124,8 +131,16 @@ public class UserServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         userDAO.deleteUser(id);
         List<User> listUser = userDAO.selectAllUsers();
-        request.setAttribute("listUser", listUser);
+        request.setAttribute("listUser  ", listUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
         dispatcher.forward(request, response);
+    }
+    // search by name method
+    private void searchByName(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        String inputString = request.getParameter("search");
+        List<User> outputList = userDAO.getUserByName(inputString);
+        RequestDispatcher requestDispatcher = request.getRequestDispatcher("user/list.jsp");
+        request.setAttribute("listUser",outputList);
+        requestDispatcher.forward(request,response);
     }
 }

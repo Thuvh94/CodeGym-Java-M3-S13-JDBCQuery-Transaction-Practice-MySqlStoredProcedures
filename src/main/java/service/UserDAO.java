@@ -14,10 +14,11 @@ public class UserDAO implements IUserDAO{
     private static final String INSERT_USERS_SQL = "INSERT INTO users" + "  (name, email, country) VALUES " +
             " (?, ?, ?);";
 
-    private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where id =?";
+    private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where id = ?";
     private static final String SELECT_ALL_USERS = "select * from users";
     private static final String DELETE_USERS_SQL = "delete from users where id = ?;";
     private static final String UPDATE_USERS_SQL = "update users set name = ?,email= ?, country =? where id = ?;";
+    private static final String SELECT_USER_BY_NAME = "select * from users where name =?; ";
 
     public UserDAO() {
     }
@@ -167,6 +168,24 @@ public class UserDAO implements IUserDAO{
             printSQLException(e);
 
         }
+    }
+    @Override
+    public List<User> getUserByName(String name) throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME);
+        preparedStatement.setString(1,name);
+        ResultSet rs = preparedStatement.executeQuery();
+        List<User> list = new ArrayList<>();
+        User user = null;
+        while (rs.next()){
+            int foundId = rs.getInt("id");
+            String foundName = rs.getString("name");
+            String foundEmail = rs.getString("email");
+            String foundCountry = rs.getString("country");
+            user = new User(foundId,foundName,foundEmail,foundCountry);
+            list.add(user);
+        }
+        return list;
     }
 
     private void printSQLException(SQLException ex) {

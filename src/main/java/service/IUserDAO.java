@@ -20,4 +20,5 @@ public interface IUserDAO {
 
     public void insertUserStore(User user) throws SQLException;
 
+    public List<User> getUserByName(String name) throws SQLException;
 }

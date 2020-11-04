@@ -20,6 +20,11 @@
     </h2>
 </center>
 <div align="center">
+    <form method="get">
+        <input type="hidden" name="action" value="search">
+        <input id= "inputSearch" type="text" placeholder="Search by name.." name="search">
+        <button type="submit">Submit</button>
+    </form>
     <table border="1" cellpadding="5">
         <caption><h2>List of Users</h2></caption>
         <tr>
