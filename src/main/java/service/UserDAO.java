@@ -130,16 +130,14 @@ public class UserDAO implements IUserDAO{
         String query = "{CALL get_user_by_id(?)}";
         Connection connection = getConnection();
         CallableStatement callableStatement = connection.prepareCall(query);
-        callableStatement.setInt(1,2);
+        callableStatement.setInt(1,id);
         ResultSet resultSet = callableStatement.executeQuery();
         User user = null;
         while(resultSet.next()){
-            int userId = resultSet.getInt(1);
-            String userName = resultSet.getString(2);
-            String userEmail = resultSet.getString(3);
-            String userCountry = resultSet.getString(4);
-            user = new User(userId,userName,userEmail,userCountry);
-
+            String userName = resultSet.getString("name");
+            String userEmail = resultSet.getString("email");
+            String userCountry = resultSet.getString("country");
+            user = new User(id,userName,userEmail,userCountry);
         }
         return user;
     }
